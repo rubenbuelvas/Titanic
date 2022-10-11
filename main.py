@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
-import sklearn
 from sklearn.tree import DecisionTreeClassifier
 
 # Model
@@ -24,7 +23,7 @@ def load_model(filename='./model/dt.sav') -> DecisionTreeClassifier:
 def parse_request(input: Input) -> pd.DataFrame:
     data = {'Age': [0.0], 'Pclass_1': [0], 'Pclass_2': [0], 'Pclass_3': [0], 'Sex_female': [0], 'Sex_male': [0]}
     data['Age'] = float(input.age)
-    data['Pclass_'+input.pclass] = 1
+    data['Pclass_'+str(input.pclass)] = 1
     data['Sex_'+input.sex] = 1
     return pd.DataFrame(data=data)
 
@@ -33,7 +32,7 @@ def parse_request(input: Input) -> pd.DataFrame:
 def predict_service(input: Input) -> Output:
     input_df = parse_request(input)
     model = load_model()
-    model.predict(input_df)[0]
+    return Output(prediction=model.predict(input_df)[0])
 
 # Controller
 
