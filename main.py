@@ -28,7 +28,6 @@ def parse_request(input: Input) -> pd.DataFrame:
     return pd.DataFrame(data=data)
 
 
-
 def predict_service(input: Input) -> Output:
     input_df = parse_request(input)
     model = load_model()
