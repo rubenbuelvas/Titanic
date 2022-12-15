@@ -1,8 +1,10 @@
+import os
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
 from sklearn.tree import DecisionTreeClassifier
+from fastapi.middleware.cors import CORSMiddleware
 
 # Model
 
@@ -32,10 +34,24 @@ def predict_service(input: Input) -> Output:
     input_df = parse_request(input)
     return Output(prediction=model.predict(input_df)[0])
 
-# Controller
+# Init
 
 app = FastAPI()
 model = load_model()
+
+origins = [
+    os.environ.get('ORIGIN')
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+# Controllers
 
 @app.get('/ping')
 async def ping_controller():
