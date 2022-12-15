@@ -1,10 +1,9 @@
-import os
-from fastapi import FastAPI
-from pydantic import BaseModel
 import pandas as pd
 import joblib
-from sklearn.tree import DecisionTreeClassifier
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from sklearn.tree import DecisionTreeClassifier
 
 # Model
 
@@ -39,16 +38,12 @@ def predict_service(input: Input) -> Output:
 app = FastAPI()
 model = load_model()
 
-origins = [
-    os.environ.get('ORIGIN')
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_methods=['*'],
+    allow_headers=['*']
 )
 
 # Controllers
