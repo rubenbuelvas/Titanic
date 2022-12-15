@@ -30,13 +30,12 @@ def parse_request(input: Input) -> pd.DataFrame:
 
 def predict_service(input: Input) -> Output:
     input_df = parse_request(input)
-    model = load_model()
     return Output(prediction=model.predict(input_df)[0])
 
 # Controller
 
 app = FastAPI()
-
+model = load_model()
 
 @app.get('/ping')
 async def ping_controller():
